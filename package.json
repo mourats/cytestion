@@ -4,7 +4,8 @@
   "description": "Cypress Code Test Generation",
   "main": "main.js",
   "scripts": {
-    "generate": ""
+    "generate": "node ./src/main.js",
+    "test": "cypress open"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
   "homepage": "https://github.com/mourats/cytestion#readme",
   "dependencies": {
     "ahocorasick": "^1.0.2",
+    "cypress": "^6.8.0",
     "fs": "0.0.1-security"
   }
 }
