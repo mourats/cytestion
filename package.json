@@ -1,0 +1,28 @@
+{
+  "name": "cytestion",
+  "version": "1.0.0",
+  "description": "Cypress Code Test Generation",
+  "main": "main.js",
+  "scripts": {
+    "generate": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mourats/cytestion.git"
+  },
+  "keywords": [
+    "cypress",
+    "test",
+    "generation"
+  ],
+  "author": "mourats",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mourats/cytestion/issues"
+  },
+  "homepage": "https://github.com/mourats/cytestion#readme",
+  "dependencies": {
+    "ahocorasick": "^1.0.2",
+    "fs": "0.0.1-security"
+  }
+}
