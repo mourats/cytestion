@@ -2,8 +2,8 @@
 describe('My First Test', () => {
   it('Visits index page', () => {
     cy.visit('/').then((window) => {
-      console.log(window.document.activeElement.outerHTML);
-      cy.writeFile('tmp/message.txt', window.document.activeElement.outerHTML);
+      console.log(window.document.body.outerHTML);
+      cy.writeFile('tmp/message.txt', window.document.body.outerHTML);
 
       cy.exec('npm run generate-files').then((elem) => console.log(elem));
 
@@ -31,8 +31,8 @@ describe('My First Test', () => {
           // console.log(window.document);
           cy.writeFile('tmp/message2.txt', window.document);
         });
-      // console.log(window.document.activeElement.innerHTML);
-      // cy.writeFile('tmp/message2.txt', window.document.activeElement.innerHTML);
+      // console.log(window.document.body.innerHTML);
+      // cy.writeFile('tmp/message2.txt', window.document.body.innerHTML);
 
       // console.log(
       //   elem.prevObject[0].defaultView.document.all['rc-tabs-1-panel-despesa']
@@ -41,10 +41,4 @@ describe('My First Test', () => {
       // console.log(elem.prevObject[0].defaultView.document);
     });
   });
-});
-
-Cypress.on('uncaught:exception', (err, runnable) => {
-  // returning false here prevents Cypress from
-  // failing the test
-  return false;
 });
