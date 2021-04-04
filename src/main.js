@@ -32,21 +32,17 @@ const generateCode = () => {
 
     const filesTmpRead = util.readTmpFiles(codeListProcessed, filesTmp);
 
+    let newCodes = [];
+    codeListProcessed.forEach((code) => {
+      if (util.canContinue(code, filesTmpRead)) {
+      }
+    });
+
     console.log(filesTmpRead);
+    filesTmpRead.forEach((elem) => {
+      console.log(elem.idUnique);
+    });
     console.log(codeListProcessed);
-    // const contentFile = fs.readFileSync('tmp/message.txt').toString();
-    // const listResult = ac.search(contentFile);
-
-    // const idStrings = listResult.map((elem) => {
-    //   return util.getIdByIdx(contentFile, elem[0]);
-    // });
-
-    // const tagsTypes = listResult.map((elem) => {
-    //   return util.getTagOfIdx(contentFile, elem[0]);
-    // });
-    // console.log(listResult);
-    // console.log([...new Set(tagsTypes)]);
-    // console.log([...new Set(idStrings)]);
   }
 };
 
