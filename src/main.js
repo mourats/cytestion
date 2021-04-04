@@ -1,15 +1,12 @@
 const fs = require('fs');
 const util = require('./util');
-const ahocorasick = require('ahocorasick');
 const { execSync } = require('child_process');
-const ac = new ahocorasick(['id=', 'idtest=']);
 
 const pathTestFile = 'cypress/integration';
 const fileTestName = 'cytestion.spec.js';
 
 const generateCode = () => {
   const date = new Date().toISOString().slice(0, 10);
-
   const fileTest = `${pathTestFile}/${date}/${fileTestName}`;
 
   if (!fs.existsSync(fileTest)) {
@@ -25,12 +22,18 @@ const generateCode = () => {
     const header = codeList.shift();
     const footer = codeList.pop();
 
-    const codeListProcessed = util.dataProcessor(codeList);
+    let codeListProcessed = util.dataProcessor(codeList);
     let filesTmp = fs.readdirSync('tmp/').filter((file) => file !== '.gitkeep');
 
-    console.log(codeListProcessed);
-    console.log(filesTmp);
+    //remove if ids was not visible
+    codeListProcessed = codeListProcessed.filter((code) =>
+      filesTmp.includes(code.actualId)
+    );
 
+    const filesTmpRead = util.readTmpFiles(codeListProcessed, filesTmp);
+
+    console.log(filesTmpRead);
+    console.log(codeListProcessed);
     // const contentFile = fs.readFileSync('tmp/message.txt').toString();
     // const listResult = ac.search(contentFile);
 
