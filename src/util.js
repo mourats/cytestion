@@ -31,21 +31,11 @@ const getRootTestFile = () => {
 const dataProcessor = (codeList) => {
   return codeList.map((elem) => {
     const obj = {};
-    obj.code = elem;
+    obj.codeText = elem;
     obj.actualId = getContentBetween(elem, "const actualId = '", "';");
     obj.parentId = getContentBetween(elem, "const parentId = '", "';");
     return obj;
   });
-};
-
-const putNewCodeSnippet = (code, id, typeId) => {
-  const clickCode = `
-  cy.get('[${typeId}"${id}"]').then(($id) => {
-    if ($id.is(':visible')) {
-      $id.click().then((_) => {
-        cy.writeContent(actualFileName, window);
-     });
-    }`;
 };
 
 const readTmpFiles = (codeList, filesTmp) => {
@@ -66,7 +56,15 @@ const readTmpFiles = (codeList, filesTmp) => {
   return result;
 };
 
-const canContinue = () => true;
+const canContinue = (code, filesTmp) => {
+  const actualFile = filesTmp.find((file) => file.name === code.actualId);
+  const parentFile = filesTmp.find((file) => file.name === code.parentId);
+
+  if (actualFile && parentFile) {
+    if (actualFile.content === parentFile.content) return false;
+  }
+  return true;
+};
 
 module.exports = {
   getContentBetween,
@@ -74,7 +72,6 @@ module.exports = {
   getTagOfIdx,
   getRootTestFile,
   dataProcessor,
-  putNewCodeSnippet,
   readTmpFiles,
   canContinue,
 };

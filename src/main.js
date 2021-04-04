@@ -1,5 +1,6 @@
 const fs = require('fs');
 const util = require('./util');
+const generate = require('./generate');
 const { execSync } = require('child_process');
 
 const pathTestFile = 'cypress/integration';
@@ -35,14 +36,28 @@ const generateCode = () => {
     let newCodes = [];
     codeListProcessed.forEach((code) => {
       if (util.canContinue(code, filesTmpRead)) {
+        const actualFile = filesTmpRead.find(
+          (file) => file.name === code.actualId
+        );
+
+        generate.generateUnique(code, actualFile, newCodes, contentTestFile);
+        generate.generateDuplicate(code, actualFile, newCodes, contentTestFile);
       }
     });
 
-    console.log(filesTmpRead);
-    filesTmpRead.forEach((elem) => {
-      console.log(elem.idUnique);
-    });
-    console.log(codeListProcessed);
+    let result = [];
+    result.push(header);
+    result.push(...codeListProcessed.map((elem) => elem.codeText));
+    result.push(...newCodes);
+    result.push(footer);
+    fs.writeFileSync(fileTest, result.join('//--CODE--'));
+
+    // console.log(filesTmpRead);
+    // filesTmpRead.forEach((elem) => {
+    //   console.log(elem.idUnique);
+    // });
+    // console.log(codeListProcessed);
+    // console.log(newCodes);
   }
 };
 
