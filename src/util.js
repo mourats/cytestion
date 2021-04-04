@@ -2,7 +2,7 @@ const fs = require('fs');
 const path_project = require('path');
 
 const getContentBetween = (string, begin, end) => {
-  let cutString = string.substring(string.indexOf(begin) + 1);
+  let cutString = string.substring(string.indexOf(begin) + begin.length);
   cutString = cutString.substring(0, cutString.indexOf(end));
   return cutString;
 };
@@ -27,9 +27,20 @@ const getRootTestFile = () => {
     .toString();
 };
 
+const dataProcessor = (codeList) => {
+  return codeList.map((elem) => {
+    const obj = {};
+    obj.code = elem;
+    obj.actualId = getContentBetween(elem, "const actualId = '", "';");
+    obj.parentId = getContentBetween(elem, "const parentId = '", "';");
+    return obj;
+  });
+};
+
 module.exports = {
   getContentBetween,
   getIdByIdx,
   getTagOfIdx,
   getRootTestFile,
+  dataProcessor,
 };
