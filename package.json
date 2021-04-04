@@ -4,8 +4,9 @@
   "description": "Cypress Code Test Generation",
   "main": "main.js",
   "scripts": {
-    "generate": "node ./src/main.js",
-    "test": "cypress open"
+    "generate-files": "node ./src/main.js",
+    "test": "cypress open",
+    "test-file":  "cypress run"
   },
   "repository": {
     "type": "git",
