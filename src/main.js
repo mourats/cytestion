@@ -1,23 +1,23 @@
 const fs = require('fs');
+const util = require('./util');
 const ahocorasick = require('ahocorasick');
-const ac = new ahocorasick(['class=']);
+const ac = new ahocorasick(['id=', 'idtest=']);
 
-const contentFile = fs.readFileSync('tmp/message3.txt').toString();
+const pathTestFile = '../cypress/integration/cytestion.spec.js';
+
+const contentFile = fs.readFileSync('tmp/message.txt').toString();
 const listResult = ac.search(contentFile);
 
 const idStrings = listResult.map((elem) => {
-  let cutString = contentFile.substr(elem[0]);
-  cutString = cutString.substring(cutString.indexOf('"') + 1);
-  cutString = cutString.substring(0, cutString.indexOf('"'));
-  return cutString;
+  return util.getIdByIdx(contentFile, elem[0]);
 });
 
 const tagsTypes = listResult.map((elem) => {
-  cutString = contentFile.substring(contentFile.lastIndexOf('<', elem[0]));
-  cutString = cutString.substring(0, cutString.indexOf('>'));
-  return cutString;
+  return util.getTagOfIdx(contentFile, elem[0]);
 });
 
+console.log(listResult);
 console.log([...new Set(tagsTypes)]);
+console.log([...new Set(idStrings)]);
 
-// console.log([...new Set(idStrings)]);
+const generateCode = () => {};
