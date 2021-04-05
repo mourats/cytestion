@@ -13,7 +13,7 @@ const generateUnique = (code, actualFile, newCodes, contentTestFile) => {
       );
       newCode = newCode.replace(
         `const actualId = '${code.actualId}';`,
-        `const actualId = '${treatedId}';`
+        actualString
       );
 
       newCode = newCode.replace(
@@ -31,16 +31,12 @@ const generateDuplicate = (code, actualFile, newCodes, contentTestFile) => {};
 const putNewCodeSnippet = (codeText, id, typeId) => {
   const clickCode = `cy.get('[${typeId}"${id}"]').then(($id) => {
         if ($id.is(':visible')) {
-            $id.click().then((_) => {
-              cy.writeContent(actualId, window);
-            });
+            $id.click();
+            cy.wait(500);
+            cy.writeContent(actualId, window);
         }
       });\n`;
   return codeText.replace('cy.writeContent(actualId, window);\n', clickCode);
-};
-
-const putCorrectTitle = (newCode, id) => {
-  console.log(util.getContentBetween(newCode, "it('", "',"));
 };
 
 module.exports = {

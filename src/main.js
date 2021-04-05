@@ -50,7 +50,8 @@ const generateCode = () => {
     result.push(...codeListProcessed.map((elem) => elem.codeText));
     result.push(...newCodes);
     result.push(footer);
-    fs.writeFileSync(fileTest, result.join('//--CODE--'));
+    if (newCodes.length > 0)
+      fs.writeFileSync(fileTest, result.join('//--CODE--'));
 
     // console.log(filesTmpRead);
     // filesTmpRead.forEach((elem) => {
