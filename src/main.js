@@ -1,7 +1,12 @@
-const fs = require('fs');
+requireUncached = (module) => {
+  delete require.cache[require.resolve(module)];
+  return require(module);
+};
+const fs = requireUncached('fs');
+const { exec } = require('child_process');
 const util = require('./util');
 const generate = require('./generate');
-const { execSync } = require('child_process');
+const path_project = require('path');
 
 const pathTestFile = 'cypress/integration';
 const fileTestName = 'cytestion.spec.js';
@@ -15,16 +20,22 @@ const generateCode = () => {
     const rootFile = util.getRootTestFile();
     console.log(rootFile);
     fs.writeFileSync(fileTest, rootFile);
-    execSync(`npm run test-file ${fileTest}`);
+    exec(`npm run test-file ${fileTest}`);
+    process.exit(0);
   } else {
-    const contentTestFile = fs.readFileSync(fileTest).toString();
+    const a = fs.readFileSync(fileTest).toString();
+    const contentTestFile = a;
     const codeList = contentTestFile.split('//--CODE--');
 
     const header = codeList.shift();
     const footer = codeList.pop();
 
     let codeListProcessed = util.dataProcessor(codeList);
-    let filesTmp = fs.readdirSync('tmp/').filter((file) => file !== '.gitkeep');
+
+    const pathToTmp = '../tmp/';
+    let filesTmp = fs
+      .readdirSync(path_project.resolve(__dirname, pathToTmp))
+      .filter((file) => file !== '.gitkeep');
 
     //remove if ids was not visible
     codeListProcessed = codeListProcessed.filter((code) =>
@@ -50,15 +61,11 @@ const generateCode = () => {
     result.push(...codeListProcessed.map((elem) => elem.codeText));
     result.push(...newCodes);
     result.push(footer);
-    if (newCodes.length > 0)
+    if (newCodes.length > 0) {
       fs.writeFileSync(fileTest, result.join('//--CODE--'));
-
-    // console.log(filesTmpRead);
-    // filesTmpRead.forEach((elem) => {
-    //   console.log(elem.idUnique);
-    // });
-    // console.log(codeListProcessed);
-    // console.log(newCodes);
+      exec(`npm run test-file ${fileTest}`);
+      process.exit(0);
+    }
   }
 };
 

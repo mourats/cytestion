@@ -45,10 +45,13 @@ const readTmpFiles = (codeList, filesTmp) => {
       codeList.map((elem) => elem.parentId).includes(file)
   );
   const result = [];
+  const pathToTmp = '../tmp/';
   filteredFilesTmp.forEach((file) => {
     const obj = {};
     obj.name = file;
-    obj.content = fs.readFileSync('tmp/' + file).toString();
+    obj.content = fs
+      .readFileSync(path_project.resolve(__dirname, pathToTmp) + '/' + file)
+      .toString();
 
     search.searchContent(obj, getIdByIdx);
     result.push(obj);

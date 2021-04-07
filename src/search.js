@@ -3,15 +3,18 @@ const ac = new ahocorasick(['id=', 'idtest=']);
 
 const searchContent = (obj, getIdByIdx) => {
   const listResult = ac.search(obj.content);
-
   let unique = [];
   let duplicate = {};
-  const idStrings = listResult.map((elem) => {
+  let idStrings = listResult.map((elem) => {
     const newObj = {};
     newObj.id = getIdByIdx(obj.content, elem[0]);
-    newObj.typeId = elem[1];
+    newObj.typeId = elem[1][0];
     return newObj;
   });
+
+  //remove not clickable ids
+  idStrings = idStrings.filter((elem) => !/rc-tabs-[0-9]-panel/.test(elem.id));
+  idStrings = idStrings.filter((elem) => !/rc-tabs-[0-9]-more/.test(elem.id));
 
   idStrings.forEach((elem) => {
     if (!unique.find((uniq) => uniq.id === elem.id)) {

@@ -4,7 +4,10 @@ const generateUnique = (code, actualFile, newCodes, contentTestFile) => {
   actualFile.idUnique.forEach((elem) => {
     const treatedId = elem.id.split('/').join('-');
     const actualString = `const actualId = '${treatedId}';`;
-    if (!contentTestFile.includes(actualString)) {
+    const actualStringWithoutNumber = actualString.replace(/[0-9]/g, '');
+    const contentTestFileWithoutNumber = contentTestFile.replace(/[0-9]/g, '');
+
+    if (!contentTestFileWithoutNumber.includes(actualStringWithoutNumber)) {
       let newCode = putNewCodeSnippet(code.codeText, elem.id, elem.typeId);
 
       newCode = newCode.replace(
