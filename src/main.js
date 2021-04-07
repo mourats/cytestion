@@ -3,7 +3,7 @@ requireUncached = (module) => {
   return require(module);
 };
 const fs = requireUncached('fs');
-const { exec } = require('child_process');
+const { execSync } = require('child_process');
 const util = require('./util');
 const generate = require('./generate');
 const path_project = require('path');
@@ -18,10 +18,8 @@ const generateCode = () => {
   if (!fs.existsSync(fileTest)) {
     fs.mkdirSync(`${pathTestFile}/${date}/`, { recursive: true });
     const rootFile = util.getRootTestFile();
-    console.log(rootFile);
     fs.writeFileSync(fileTest, rootFile);
-    exec(`npm run test-file ${fileTest}`);
-    process.exit(0);
+    execSync(`npm run test-file ${fileTest}`);
   } else {
     const a = fs.readFileSync(fileTest).toString();
     const contentTestFile = a;
@@ -63,8 +61,7 @@ const generateCode = () => {
     result.push(footer);
     if (newCodes.length > 0) {
       fs.writeFileSync(fileTest, result.join('//--CODE--'));
-      exec(`npm run test-file ${fileTest}`);
-      process.exit(0);
+      execSync(`npm run test-file ${fileTest}`);
     }
   }
 };

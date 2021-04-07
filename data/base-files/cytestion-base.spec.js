@@ -4,7 +4,7 @@ describe('Automatic generated test file to click on elements on the page', () =>
     const parentId = '';
     const actualId = 'root';
     cy.visit('/').then((window) => {
-      cy.wait(500);
+      cy.wait(200);
       cy.writeContent(actualId, window);
     });
   });

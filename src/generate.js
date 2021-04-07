@@ -35,7 +35,7 @@ const putNewCodeSnippet = (codeText, id, typeId) => {
   const clickCode = `cy.get('[${typeId}"${id}"]').then(($id) => {
         if ($id.is(':visible')) {
             $id.click();
-            cy.wait(500);
+            cy.wait(200);
             cy.writeContent(actualId, window);
         }
       });\n`;
