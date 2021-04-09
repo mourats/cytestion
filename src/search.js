@@ -1,5 +1,5 @@
 const ahocorasick = require('ahocorasick');
-const ac = new ahocorasick(['id=', 'idtest=']);
+const ac = new ahocorasick(['id=', 'idtest=', 'class=']);
 
 const searchContent = (obj, getIdByIdx) => {
   const listResult = ac.search(obj.content);
@@ -15,6 +15,11 @@ const searchContent = (obj, getIdByIdx) => {
   //remove not clickable ids
   idStrings = idStrings.filter((elem) => !/rc-tabs-[0-9]-panel/.test(elem.id));
   idStrings = idStrings.filter((elem) => !/rc-tabs-[0-9]-more/.test(elem.id));
+  idStrings = idStrings.filter(
+    (elem) =>
+      (elem.typeId === 'class=' && /ant-btn/.test(elem.id)) ||
+      elem.typeId !== 'class='
+  );
 
   idStrings.forEach((elem) => {
     if (!unique.find((uniq) => uniq.id === elem.id)) {

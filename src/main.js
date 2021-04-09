@@ -61,7 +61,7 @@ const generateCode = () => {
     result.push(footer);
     if (newCodes.length > 0) {
       fs.writeFileSync(fileTest, result.join('//--CODE--'));
-      execSync(`npm run test-file ${fileTest}`);
+      // execSync(`npm run test-file ${fileTest}`);
     } else {
       execSync(`rm -v ${path_project.resolve(__dirname, pathToTmp)}/*`);
     }

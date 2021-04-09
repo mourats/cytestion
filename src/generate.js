@@ -7,7 +7,12 @@ const generateUnique = (code, actualFile, newCodes, contentTestFile) => {
     const actualStringWithoutNumber = actualString.replace(/[0-9]/g, '');
     const contentTestFileWithoutNumber = contentTestFile.replace(/[0-9]/g, '');
 
-    if (!contentTestFileWithoutNumber.includes(actualStringWithoutNumber)) {
+    if (
+      !contentTestFileWithoutNumber.includes(actualStringWithoutNumber) &&
+      !newCodes.some((code) =>
+        code.replace(/[0-9]/g, '').includes(actualStringWithoutNumber)
+      )
+    ) {
       let newCode = putNewCodeSnippet(code.codeText, elem.id, elem.typeId);
 
       newCode = newCode.replace(
