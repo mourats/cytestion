@@ -79,12 +79,8 @@ const willNotGenerateDuplicate = (
   const parentStringWithoutNumber = parentString.replace(/[0-9]/g, '');
 
   return (
-    !codes.some(
-      (code) =>
-        code.codeText
-          .replace(/[0-9]/g, '')
-          .includes(actualStringWithoutNumber) &&
-        code.codeText.replace(/[0-9]/g, '').includes(parentStringWithoutNumber)
+    !codes.some((code) =>
+      code.codeText.replace(/[0-9]/g, '').includes(actualStringWithoutNumber)
     ) &&
     !newCodes.some(
       (code) =>

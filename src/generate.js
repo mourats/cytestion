@@ -109,11 +109,9 @@ const putIdClickSnippet = (codeText, id, typeId) => {
 
 const putClassClickSnippet = (codeText, classId, typeId) => {
   const clickCode = `cy.get('[${typeId}"${classId}"]').then(($class) => {
-        if ($class[0].is(':visible')) {
-            $class[0].click();
-            cy.wait(200);
-            cy.writeContent(actualId, window);
-        }
+          $class[0].click();
+          cy.wait(200);
+          cy.writeContent(actualId, window);
       });\n`;
   return codeText.replace('cy.writeContent(actualId, window);\n', clickCode);
 };
