@@ -19,7 +19,7 @@ const generateCode = () => {
     fs.mkdirSync(`${pathTestFile}/${date}/`, { recursive: true });
     const rootFile = util.getRootTestFile();
     fs.writeFileSync(fileTest, rootFile);
-    execSync(`npm run test-file ${fileTest}`);
+    // execSync(`npm run test-file ${fileTest}`);
   } else {
     const a = fs.readFileSync(fileTest).toString();
     const contentTestFile = a;
@@ -49,8 +49,12 @@ const generateCode = () => {
           (file) => file.name === code.actualId
         );
 
-        generate.generateUnique(code, actualFile, newCodes, contentTestFile);
-        generate.generateDuplicate(code, actualFile, newCodes, contentTestFile);
+        generate.generateNewTestCodes(
+          code,
+          actualFile,
+          codeListProcessed,
+          newCodes
+        );
       }
     });
 

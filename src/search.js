@@ -1,45 +1,52 @@
 const ahocorasick = require('ahocorasick');
-const ac = new ahocorasick(['id=', 'idtest=', 'class=']);
+const ac = new ahocorasick(['id=', 'class=']);
+const filters = require('./ant-design-filters');
 
-const searchContent = (obj, getIdByIdx) => {
+const searchContent = (obj, filesName, getIdByIdx, getTagOfIdx) => {
   const listResult = ac.search(obj.content);
-  let unique = [];
-  let duplicate = {};
+
   let idStrings = listResult.map((elem) => {
     const newObj = {};
     newObj.id = getIdByIdx(obj.content, elem[0]);
+    newObj.tag = getTagOfIdx(obj.content, elem[0]);
     newObj.typeId = elem[1][0];
     return newObj;
   });
 
   //remove not clickable ids
-  idStrings = idStrings.filter((elem) => !/rc-tabs-[0-9]-panel/.test(elem.id));
-  idStrings = idStrings.filter((elem) => !/rc-tabs-[0-9]-more/.test(elem.id));
-  idStrings = idStrings.filter(
-    (elem) =>
-      (elem.typeId === 'class=' && /ant-btn/.test(elem.id)) ||
-      elem.typeId !== 'class='
-  );
+  idStrings = filters.filterNotClickablePanel(idStrings);
+  idStrings = filters.filterNotButtonClass(idStrings);
 
-  idStrings.forEach((elem) => {
-    if (!unique.find((uniq) => uniq.id === elem.id)) {
-      unique.push(elem);
-    } else {
-      if (!Object.keys(duplicate).includes(elem.id)) {
-        duplicate[elem.id] = [elem, elem];
-      } else {
-        duplicate[elem.id].push(elem);
-      }
+  //remove reference yourself
+  idStrings = idStrings.filter((elem) => !filesName.includes(elem.id));
+
+  //remove duplicates
+  let idStringUnique = [];
+  idStrings.forEach((curr) => {
+    if (!idStringUnique.find((elem) => elem.id === curr.id)) {
+      idStringUnique.push(curr);
     }
   });
 
-  duplicate = Object.values(duplicate);
-  unique = unique.filter(
-    (uniq) => !duplicate.find((dupl) => dupl.includes(uniq))
-  );
+  obj.idClick = [];
+  obj.idsForm = [];
+  obj.classClick = [];
 
-  obj.idUnique = unique;
-  obj.idDuplicate = duplicate;
+  idStringUnique.forEach((elem) => {
+    if (elem.typeId === 'class=') {
+      obj.classClick.push(elem);
+    } else if (elem.typeId === 'id=') {
+      if (elem.tag.includes('<input')) {
+        const idxClass = elem.tag.indexOf('class=');
+        if (idxClass !== -1) {
+          elem.classId = getIdByIdx(elem.tag, idxClass);
+          obj.idsForm.push(elem);
+        }
+      } else {
+        obj.idClick.push(elem);
+      }
+    }
+  });
 };
 
 module.exports = {

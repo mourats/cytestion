@@ -17,7 +17,7 @@ const getIdByIdx = (string, idx) => {
 
 const getTagOfIdx = (string, idx) => {
   let cutString = string.substring(string.lastIndexOf('<', idx));
-  cutString = cutString.substring(0, cutString.indexOf('>'));
+  cutString = cutString.substring(0, cutString.indexOf('>') + 1);
   return cutString;
 };
 
@@ -53,7 +53,7 @@ const readTmpFiles = (codeList, filesTmp) => {
       .readFileSync(path_project.resolve(__dirname, pathToTmp) + '/' + file)
       .toString();
 
-    search.searchContent(obj, getIdByIdx);
+    search.searchContent(obj, filteredFilesTmp, getIdByIdx, getTagOfIdx);
     result.push(obj);
   });
   return result;
@@ -69,6 +69,31 @@ const canContinue = (code, filesTmp) => {
   return true;
 };
 
+const willNotGenerateDuplicate = (
+  actualString,
+  parentString,
+  codes,
+  newCodes
+) => {
+  const actualStringWithoutNumber = actualString.replace(/[0-9]/g, '');
+  const parentStringWithoutNumber = parentString.replace(/[0-9]/g, '');
+
+  return (
+    !codes.some(
+      (code) =>
+        code.codeText
+          .replace(/[0-9]/g, '')
+          .includes(actualStringWithoutNumber) &&
+        code.codeText.replace(/[0-9]/g, '').includes(parentStringWithoutNumber)
+    ) &&
+    !newCodes.some(
+      (code) =>
+        code.replace(/[0-9]/g, '').includes(actualStringWithoutNumber) &&
+        code.replace(/[0-9]/g, '').includes(parentStringWithoutNumber)
+    )
+  );
+};
+
 module.exports = {
   getContentBetween,
   getIdByIdx,
@@ -77,4 +102,5 @@ module.exports = {
   dataProcessor,
   readTmpFiles,
   canContinue,
+  willNotGenerateDuplicate,
 };

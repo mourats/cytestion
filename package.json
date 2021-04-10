@@ -6,7 +6,7 @@
   "scripts": {
     "generate-files": "node ./src/main.js",
     "test": "cypress open",
-    "test-file":  "cypress run -s"
+    "test-file": "cypress run -s"
   },
   "repository": {
     "type": "git",
@@ -26,6 +26,7 @@
   "dependencies": {
     "ahocorasick": "^1.0.2",
     "cypress": "^6.8.0",
+    "faker": "^5.5.3",
     "fs": "0.0.1-security"
   }
 }
