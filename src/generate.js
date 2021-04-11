@@ -117,14 +117,14 @@ const putClassClickSnippet = (codeText, classId, typeId) => {
 };
 
 const putIdFormSnippet = (codeText, listId, typeId) => {
-  const fillingCode = '';
+  let fillingCode = '';
   listId.forEach(
     (id) =>
       (fillingCode += `cy.get('[${typeId}"${id}"]').then(($id) => {
         if ($id.is(':visible')) {
             $id.click();
             $id.clear();
-            $id.type(${faker.name.findName()});
+            $id.type('${faker.name.findName()}');
         }
       });\n`)
   );
