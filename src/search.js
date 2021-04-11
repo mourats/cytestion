@@ -2,7 +2,7 @@ const ahocorasick = require('ahocorasick');
 const ac = new ahocorasick(['id=', 'class=']);
 const filters = require('./ant-design-filters');
 
-const searchContent = (obj, filesName, getIdByIdx, getTagOfIdx) => {
+const searchContent = (obj, getIdByIdx, getTagOfIdx) => {
   const listResult = ac.search(obj.content);
 
   let idStrings = listResult.map((elem) => {
@@ -16,9 +16,6 @@ const searchContent = (obj, filesName, getIdByIdx, getTagOfIdx) => {
   //remove not clickable ids
   idStrings = filters.filterNotClickablePanel(idStrings);
   idStrings = filters.filterNotButtonClass(idStrings);
-
-  //remove reference yourself
-  idStrings = idStrings.filter((elem) => !filesName.includes(elem.id));
 
   //remove duplicates
   let idStringUnique = [];

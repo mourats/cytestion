@@ -39,10 +39,8 @@ const dataProcessor = (codeList) => {
 };
 
 const readTmpFiles = (codeList, filesTmp) => {
-  const filteredFilesTmp = filesTmp.filter(
-    (file) =>
-      codeList.map((elem) => elem.actualId).includes(file) ||
-      codeList.map((elem) => elem.parentId).includes(file)
+  const filteredFilesTmp = filesTmp.filter((file) =>
+    codeList.map((elem) => elem.parentId + '-' + elem.actualId).includes(file)
   );
   const result = [];
   const pathToTmp = '../tmp/';
@@ -53,7 +51,7 @@ const readTmpFiles = (codeList, filesTmp) => {
       .readFileSync(path_project.resolve(__dirname, pathToTmp) + '/' + file)
       .toString();
 
-    search.searchContent(obj, filteredFilesTmp, getIdByIdx, getTagOfIdx);
+    search.searchContent(obj, getIdByIdx, getTagOfIdx);
     result.push(obj);
   });
   return result;

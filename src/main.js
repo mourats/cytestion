@@ -37,7 +37,7 @@ const generateCode = () => {
 
     //remove if ids was not visible
     codeListProcessed = codeListProcessed.filter((code) =>
-      filesTmp.includes(code.actualId)
+      filesTmp.includes(code.parentId + '-' + code.actualId)
     );
 
     const filesTmpRead = util.readTmpFiles(codeListProcessed, filesTmp);
@@ -46,7 +46,7 @@ const generateCode = () => {
     codeListProcessed.forEach((code) => {
       if (util.canContinue(code, filesTmpRead)) {
         const actualFile = filesTmpRead.find(
-          (file) => file.name === code.actualId
+          (file) => file.name === code.parentId + '-' + code.actualId
         );
 
         generate.generateNewTestCodes(

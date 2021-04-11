@@ -101,36 +101,39 @@ const putIdClickSnippet = (codeText, id, typeId) => {
         if ($id.is(':visible')) {
             $id.click();
             cy.wait(200);
-            cy.writeContent(actualId, window);
+            cy.writeContent(parentId, actualId, window);
         }
       });\n`;
-  return codeText.replace('cy.writeContent(actualId, window);\n', clickCode);
+  return codeText.replace(
+    'cy.writeContent(parentId, actualId, window);\n',
+    clickCode
+  );
 };
 
 const putClassClickSnippet = (codeText, classId, typeId) => {
   const clickCode = `cy.get('[${typeId}"${classId}"]').then(($class) => {
           $class[0].click();
           cy.wait(200);
-          cy.writeContent(actualId, window);
+          cy.writeContent(parentId, actualId, window);
       });\n`;
-  return codeText.replace('cy.writeContent(actualId, window);\n', clickCode);
+  return codeText.replace(
+    'cy.writeContent(parentId, actualId, window);\n',
+    clickCode
+  );
 };
 
 const putIdFormSnippet = (codeText, listId, typeId) => {
   let fillingCode = '';
   listId.forEach(
     (id) =>
-      (fillingCode += `cy.get('[${typeId}"${id}"]').then(($id) => {
-        if ($id.is(':visible')) {
-            $id.click();
-            $id.clear();
-            $id.type('${faker.name.findName()}');
-        }
-      });\n`)
+      (fillingCode += `cy.get('[${typeId}"${id}"]').click().clearThenType('${faker.name.findName()}');\n`)
   );
   fillingCode += `cy.get('.ant-form').submit();\n`;
 
-  return codeText.replace('cy.writeContent(actualId, window);\n', fillingCode);
+  return codeText.replace(
+    'cy.writeContent(parentId, actualId, window);\n',
+    fillingCode
+  );
 };
 
 module.exports = {

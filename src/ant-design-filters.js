@@ -18,7 +18,7 @@ const filterNotButtonClass = (idStrings) => {
 const filterNotIdUppercase = (idStrings) => {
   return idStrings.filter(
     (elem) =>
-      (elem.typeId === 'id=' && /[A-Z]/.test(elem.id)) || elem.typeId !== 'id='
+      (elem.typeId === 'id=' && !/[A-Z]/.test(elem.id)) || elem.typeId !== 'id='
   );
 };
 
