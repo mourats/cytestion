@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path_project = require('path');
 const ahocorasick = require('ahocorasick');
 const ac = new ahocorasick(['id=', 'class=']);
 const filters = require('./ant-design-filters');
@@ -34,16 +36,32 @@ const searchContent = (obj, getIdByIdx, getTagOfIdx) => {
       obj.classClick.push(elem);
     } else if (elem.typeId === 'id=') {
       if (elem.tag.includes('<input')) {
-        const idxClass = elem.tag.indexOf('class=');
-        if (idxClass !== -1) {
-          elem.classId = getIdByIdx(elem.tag, idxClass);
-          obj.idsForm.push(elem);
-        }
+        processTypeForm(elem, obj, getIdByIdx);
       } else {
         obj.idClick.push(elem);
       }
     }
   });
+};
+
+const processTypeForm = (elem, obj, getIdByIdx) => {
+  let rawdata = fs.readFileSync(
+    path_project.resolve(__dirname, '../data/ant-design/dictionary.json')
+  );
+  const data = JSON.parse(rawdata);
+  const keysData = Object.keys(data);
+
+  const idxClass = elem.tag.indexOf('class=');
+  if (idxClass !== -1) {
+    const classInput = getIdByIdx(elem.tag, idxClass);
+    if (keysData.includes(classInput)) {
+      elem.classId = data[classInput];
+    }
+  } else {
+    //detected that the datepicker ant input has no class of its own
+    elem.classId = 'input-picker';
+  }
+  obj.idsForm.push(elem);
 };
 
 module.exports = {

@@ -31,7 +31,7 @@ const generateIdClick = (code, idList, codes, newCodes) => {
 
       newCode = newCode.replace(
         util.getContentBetween(newCode, "it('", "',"),
-        `Click on element ${elem.id}`
+        `Click on element ${code.actualId}->${elem.id}`
       );
 
       newCodes.push(newCode);
@@ -60,7 +60,7 @@ const generateClassClick = (code, classList, codes, newCodes) => {
 
       newCode = newCode.replace(
         util.getContentBetween(newCode, "it('", "',"),
-        `Click on class ${elem.id}`
+        `Click on class ${code.actualId}->${elem.id}`
       );
 
       newCodes.push(newCode);
@@ -68,7 +68,6 @@ const generateClassClick = (code, classList, codes, newCodes) => {
   });
 };
 const generateIdsForm = (code, idsForm, codes, newCodes) => {
-  const typeId = idsForm[0] && idsForm[0].typeId;
   const listOnlyId = idsForm.map((elem) => elem.id);
   const treatedId = listOnlyId.join('-').split('/').join('-');
   const actualString = `const actualId = '${treatedId}';`;
@@ -77,7 +76,7 @@ const generateIdsForm = (code, idsForm, codes, newCodes) => {
   if (
     util.willNotGenerateDuplicate(actualString, parentString, codes, newCodes)
   ) {
-    let newCode = putIdFormSnippet(code.codeText, listOnlyId, typeId);
+    let newCode = putIdFormSnippet(code.codeText, idsForm);
     newCode = newCode.replace(
       `const parentId = '${code.parentId}';`,
       parentString
@@ -89,7 +88,7 @@ const generateIdsForm = (code, idsForm, codes, newCodes) => {
 
     newCode = newCode.replace(
       util.getContentBetween(newCode, "it('", "',"),
-      `Filling values ${treatedId} and submit`
+      `Filling values ${code.actualId}->${treatedId} and submit`
     );
 
     newCodes.push(newCode);
@@ -97,13 +96,8 @@ const generateIdsForm = (code, idsForm, codes, newCodes) => {
 };
 
 const putIdClickSnippet = (codeText, id, typeId) => {
-  const clickCode = `cy.get('[${typeId}"${id}"]').then(($id) => {
-        if ($id.is(':visible')) {
-            $id.click();
-            cy.wait(200);
-            cy.writeContent(parentId, actualId, window);
-        }
-      });\n`;
+  const clickCode = `cy.clickIfExist('[${typeId}"${id}"]');
+      cy.writeContent(parentId, actualId, window);\n`;
   return codeText.replace(
     'cy.writeContent(parentId, actualId, window);\n',
     clickCode
@@ -111,29 +105,57 @@ const putIdClickSnippet = (codeText, id, typeId) => {
 };
 
 const putClassClickSnippet = (codeText, classId, typeId) => {
-  const clickCode = `cy.get('[${typeId}"${classId}"]').then(($class) => {
-          $class[0].click();
-          cy.wait(200);
-          cy.writeContent(parentId, actualId, window);
-      });\n`;
+  const clickCode = `cy.clickIfExistClass('[${typeId}"${classId}"]');
+      cy.writeContent(parentId, actualId, window);\n`;
   return codeText.replace(
     'cy.writeContent(parentId, actualId, window);\n',
     clickCode
   );
 };
 
-const putIdFormSnippet = (codeText, listId, typeId) => {
+const putIdFormSnippet = (codeText, idsForm) => {
   let fillingCode = '';
-  listId.forEach(
-    (id) =>
-      (fillingCode += `cy.get('[${typeId}"${id}"]').click().clearThenType('${faker.name.findName()}');\n`)
-  );
+  idsForm.forEach((elem) => (fillingCode += getCorrectTest(elem)));
   fillingCode += `cy.get('.ant-form').submit();\n`;
 
   return codeText.replace(
     'cy.writeContent(parentId, actualId, window);\n',
     fillingCode
   );
+};
+
+const getCorrectTest = (element) => {
+  if (!element.classId || element.classId === 'input') {
+    let value = faker.random.word();
+    if (element.tag.includes('name') || element.tag.includes('nome')) {
+      value = faker.name.firstName();
+    } else if (
+      element.tag.includes('lastname') ||
+      element.tag.includes('sobrenome')
+    ) {
+      value = faker.name.lastName();
+    } else if (
+      element.tag.includes('phone') ||
+      element.tag.includes('telefone')
+    ) {
+      value = faker.phone.phoneNumber();
+    } else if (element.tag.includes('email')) {
+      value = faker.internet.email();
+    }
+    return `cy.get('[${element.typeId}"${element.id}"]').click().clearThenType('${value}');\n`;
+  } else if (element.classId === 'input-number') {
+    return `cy.get('[${element.typeId}"${
+      element.id
+    }"]').click().clearThenType('${faker.datatype.number({
+      min: 1,
+      max: 10,
+    })}');\n`;
+  } else if (element.classId === 'input-select') {
+    return `cy.get('[${element.typeId}"${element.id}"]').click({ force: true }).wait(50).type('{enter}');\n`;
+  } else if (element.classId === 'input-picker') {
+    return `cy.get('[${element.typeId}"${element.id}"]').click();
+    cy.clickIfExistClass('[class="ant-picker-cell-inner"]');;\n`;
+  }
 };
 
 module.exports = {
