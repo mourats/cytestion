@@ -32,15 +32,16 @@ const dataProcessor = (codeList) => {
   return codeList.map((elem) => {
     const obj = {};
     obj.codeText = elem;
-    obj.actualId = getContentBetween(elem, "const actualId = '", "';");
-    obj.parentId = getContentBetween(elem, "const parentId = '", "';");
+    obj.actualId = getContentBetween(elem, 'const actualId = [', '];')
+      .replace(/'/g, '')
+      .split(',');
     return obj;
   });
 };
 
 const readTmpFiles = (codeList, filesTmp) => {
   const filteredFilesTmp = filesTmp.filter((file) =>
-    codeList.map((elem) => elem.parentId + '-' + elem.actualId).includes(file)
+    codeList.map((elem) => elem.actualId.join('->')).includes(file)
   );
   const result = [];
   const pathToTmp = '../tmp/';
@@ -58,8 +59,16 @@ const readTmpFiles = (codeList, filesTmp) => {
 };
 
 const canContinue = (code, filesTmp) => {
-  const actualFile = filesTmp.find((file) => file.name === code.actualId);
-  const parentFile = filesTmp.find((file) => file.name === code.parentId);
+  const actualFile = filesTmp.find(
+    (file) => file.name === code.actualId.join('->')
+  );
+  const parentFile = filesTmp.find(
+    (file) =>
+      file.name ===
+      code.actualId
+        .filter((el, idx) => idx < code.actualId.length - 1)
+        .join('->')
+  );
 
   if (actualFile && parentFile) {
     if (actualFile.content === parentFile.content) return false;
@@ -67,23 +76,17 @@ const canContinue = (code, filesTmp) => {
   return true;
 };
 
-const willNotGenerateDuplicate = (
-  actualString,
-  parentString,
-  codes,
-  newCodes
-) => {
+const willNotGenerateDuplicate = (actualString, actualId, codes, newCodes) => {
   const actualStringWithoutNumber = actualString.replace(/[0-9]/g, '');
-  const parentStringWithoutNumber = parentString.replace(/[0-9]/g, '');
 
   return (
     !codes.some((code) =>
-      code.codeText.replace(/[0-9]/g, '').includes(actualStringWithoutNumber)
+      code.codeText
+        .replace(/[0-9]/g, '')
+        .includes(actualId.replace(/[0-9]/g, '') + "'];")
     ) &&
-    !newCodes.some(
-      (code) =>
-        code.replace(/[0-9]/g, '').includes(actualStringWithoutNumber) &&
-        code.replace(/[0-9]/g, '').includes(parentStringWithoutNumber)
+    !newCodes.some((code) =>
+      code.replace(/[0-9]/g, '').includes(actualStringWithoutNumber)
     )
   );
 };

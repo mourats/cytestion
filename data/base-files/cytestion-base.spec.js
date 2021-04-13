@@ -1,11 +1,10 @@
 describe('Automatic generated test file to click on elements on the page', () => {
   //--CODE--
   it('Visits index page', () => {
-    const parentId = '';
-    const actualId = 'root';
+    const actualId = ['root'];
     cy.visit('/').then((window) => {
       cy.wait(200);
-      cy.writeContent(parentId, actualId, window);
+      cy.writeContent(actualId, window);
     });
   });
   //--CODE--

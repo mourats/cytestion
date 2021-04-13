@@ -37,7 +37,7 @@ const generateCode = () => {
 
     //remove if ids was not visible
     codeListProcessed = codeListProcessed.filter((code) =>
-      filesTmp.includes(code.parentId + '-' + code.actualId)
+      filesTmp.includes(code.actualId.join('->'))
     );
 
     const filesTmpRead = util.readTmpFiles(codeListProcessed, filesTmp);
@@ -46,7 +46,7 @@ const generateCode = () => {
     codeListProcessed.forEach((code) => {
       if (util.canContinue(code, filesTmpRead)) {
         const actualFile = filesTmpRead.find(
-          (file) => file.name === code.parentId + '-' + code.actualId
+          (file) => file.name === code.actualId.join('->')
         );
 
         generate.generateNewTestCodes(
@@ -65,7 +65,6 @@ const generateCode = () => {
     result.push(footer);
     if (newCodes.length > 0) {
       fs.writeFileSync(fileTest, result.join('//--CODE--'));
-      execSync(`rm -v ${path_project.resolve(__dirname, pathToTmp)}/*`);
       // execSync(`npm run test-file ${fileTest}`);
     } else {
       execSync(`rm -v ${path_project.resolve(__dirname, pathToTmp)}/*`);

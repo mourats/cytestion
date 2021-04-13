@@ -3,7 +3,8 @@ const filterNotClickablePanel = (idStrings) => {
   return idStrings.filter(
     (elem) =>
       !/rc-tabs-[0-9]-panel/.test(elem.id) &&
-      !/rc-tabs-[0-9]-more/.test(elem.id)
+      !/rc-tabs-[0-9]-more/.test(elem.id) &&
+      !/rcDialogTitle0/.test(elem.id)
   );
 };
 

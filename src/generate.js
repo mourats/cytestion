@@ -12,26 +12,24 @@ const generateNewTestCodes = (code, actualFile, codes, newCodes) => {
 
 const generateIdClick = (code, idList, codes, newCodes) => {
   idList.forEach((elem) => {
-    const treatedId = elem.id.split('/').join('-');
-    const actualString = `const actualId = '${treatedId}';`;
-    const parentString = `const parentId = '${code.actualId}';`;
-
+    const treatedId = [...code.actualId, elem.id.split('/').join('-')];
+    const actualString = `const actualId = [${
+      "'" + treatedId.join("','") + "'"
+    }];`;
     if (
-      util.willNotGenerateDuplicate(actualString, parentString, codes, newCodes)
+      util.willNotGenerateDuplicate(
+        actualString,
+        elem.id.split('/').join('-'),
+        codes,
+        newCodes
+      )
     ) {
       let newCode = putIdClickSnippet(code.codeText, elem.id, elem.typeId);
-      newCode = newCode.replace(
-        `const parentId = '${code.parentId}';`,
-        parentString
-      );
-      newCode = newCode.replace(
-        `const actualId = '${code.actualId}';`,
-        actualString
-      );
+      newCode = newCode.replace(/^.*const actualId = .*$/gm, actualString);
 
       newCode = newCode.replace(
         util.getContentBetween(newCode, "it('", "',"),
-        `Click on element ${code.actualId}->${elem.id}`
+        `Click on element ${treatedId.join('->')}`
       );
 
       newCodes.push(newCode);
@@ -41,26 +39,24 @@ const generateIdClick = (code, idList, codes, newCodes) => {
 
 const generateClassClick = (code, classList, codes, newCodes) => {
   classList.forEach((elem) => {
-    const treatedId = elem.id.split('/').join('-');
-    const actualString = `const actualId = '${treatedId}';`;
-    const parentString = `const parentId = '${code.actualId}';`;
-
+    const treatedId = [...code.actualId, elem.id.split('/').join('-')];
+    const actualString = `const actualId = [${
+      "'" + treatedId.join("','") + "'"
+    }];`;
     if (
-      util.willNotGenerateDuplicate(actualString, parentString, codes, newCodes)
+      util.willNotGenerateDuplicate(
+        actualString,
+        elem.id.split('/').join('-'),
+        codes,
+        newCodes
+      )
     ) {
       let newCode = putClassClickSnippet(code.codeText, elem.id, elem.typeId);
-      newCode = newCode.replace(
-        `const parentId = '${code.parentId}';`,
-        parentString
-      );
-      newCode = newCode.replace(
-        `const actualId = '${code.actualId}';`,
-        actualString
-      );
+      newCode = newCode.replace(/^.*const actualId = .*$/gm, actualString);
 
       newCode = newCode.replace(
         util.getContentBetween(newCode, "it('", "',"),
-        `Click on class ${code.actualId}->${elem.id}`
+        `Click on element ${treatedId.join('->')}`
       );
 
       newCodes.push(newCode);
@@ -69,26 +65,27 @@ const generateClassClick = (code, classList, codes, newCodes) => {
 };
 const generateIdsForm = (code, idsForm, codes, newCodes) => {
   const listOnlyId = idsForm.map((elem) => elem.id);
-  const treatedId = listOnlyId.join('-').split('/').join('-');
-  const actualString = `const actualId = '${treatedId}';`;
-  const parentString = `const parentId = '${code.actualId}';`;
-
+  const treatedId = [
+    ...code.actualId,
+    listOnlyId.join('-').split('/').join('-'),
+  ];
+  const actualString = `const actualId = [${
+    "'" + treatedId.join("','") + "'"
+  }];`;
   if (
-    util.willNotGenerateDuplicate(actualString, parentString, codes, newCodes)
+    util.willNotGenerateDuplicate(
+      actualString,
+      listOnlyId.join('-').split('/').join('-'),
+      codes,
+      newCodes
+    )
   ) {
     let newCode = putIdFormSnippet(code.codeText, idsForm);
-    newCode = newCode.replace(
-      `const parentId = '${code.parentId}';`,
-      parentString
-    );
-    newCode = newCode.replace(
-      `const actualId = '${code.actualId}';`,
-      actualString
-    );
+    newCode = newCode.replace(/^.*const actualId = .*$/gm, actualString);
 
     newCode = newCode.replace(
       util.getContentBetween(newCode, "it('", "',"),
-      `Filling values ${code.actualId}->${treatedId} and submit`
+      `Filling values ${treatedId.join('->')} and submit`
     );
 
     newCodes.push(newCode);
@@ -97,20 +94,14 @@ const generateIdsForm = (code, idsForm, codes, newCodes) => {
 
 const putIdClickSnippet = (codeText, id, typeId) => {
   const clickCode = `cy.clickIfExist('[${typeId}"${id}"]');
-      cy.writeContent(parentId, actualId, window);\n`;
-  return codeText.replace(
-    'cy.writeContent(parentId, actualId, window);\n',
-    clickCode
-  );
+      cy.writeContent(actualId, window);\n`;
+  return codeText.replace('cy.writeContent(actualId, window);\n', clickCode);
 };
 
 const putClassClickSnippet = (codeText, classId, typeId) => {
   const clickCode = `cy.clickIfExistClass('[${typeId}"${classId}"]');
-      cy.writeContent(parentId, actualId, window);\n`;
-  return codeText.replace(
-    'cy.writeContent(parentId, actualId, window);\n',
-    clickCode
-  );
+      cy.writeContent(actualId, window);\n`;
+  return codeText.replace('cy.writeContent(actualId, window);\n', clickCode);
 };
 
 const putIdFormSnippet = (codeText, idsForm) => {
@@ -118,10 +109,7 @@ const putIdFormSnippet = (codeText, idsForm) => {
   idsForm.forEach((elem) => (fillingCode += getCorrectTest(elem)));
   fillingCode += `cy.get('.ant-form').submit();\n`;
 
-  return codeText.replace(
-    'cy.writeContent(parentId, actualId, window);\n',
-    fillingCode
-  );
+  return codeText.replace('cy.writeContent(actualId, window);\n', fillingCode);
 };
 
 const getCorrectTest = (element) => {
