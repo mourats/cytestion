@@ -4,7 +4,7 @@
   "description": "Cypress Code Test Generation",
   "main": "main.js",
   "scripts": {
-    "generate-files": "node ./src/main.js",
+    "generate-test": "node ./src/main.js",
     "cypress": "cypress open",
     "test-file": "cypress run -s"
   },
