@@ -9,7 +9,7 @@ node_modules
 
 npm-debug.log*
 
-cypress/videos
-cypress/screenshots
+# cypress dependence
+cypress
 
 tmp/*
