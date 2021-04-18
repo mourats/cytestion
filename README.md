@@ -30,3 +30,7 @@ O artefato gerado será um arquivo de teste chamado `cytestion.spec.js`, encontr
 
 O processo de geração dos testes funciona da seguinte forma, uma visita incial é feita na url base fornecida, após isso, o html encontrado na página é analisado e, de forma seletiva, novos testes são criados, a partir dos identificadores `id=` encontrados. O objetivo final é percorrer todos os caminhos possíveis por meios de click e preencher os formulários encontrados, fazendo sua submissão.
 
+#####O processo de explorar os testes é feito pela execução em linha de comando, mas para exemplificar o que acontece, veja os gifs:
+
+![Alt Text](data/gifs-readme/generate-test-1.gif)
+![Alt Text](data/gifs-readme/generate-test-2.gif)
