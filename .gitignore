@@ -11,5 +11,6 @@ npm-debug.log*
 
 # cypress dependence
 cypress
+cypress.json
 
 tmp/*
