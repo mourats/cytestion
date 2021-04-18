@@ -1,0 +1,6 @@
+{
+  "ant-input" : "input",
+  "ant-input-number-input" : "input-number",
+  "ant-select-selection-search-input": "input-select",
+  "ant-picker-input" : "input-picker"
+}

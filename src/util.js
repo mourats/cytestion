@@ -1,5 +1,9 @@
+const fs = require('fs');
+const path_project = require('path');
+const search = require('./search');
+
 const getContentBetween = (string, begin, end) => {
-  let cutString = string.substring(string.indexOf(begin) + 1);
+  let cutString = string.substring(string.indexOf(begin) + begin.length);
   cutString = cutString.substring(0, cutString.indexOf(end));
   return cutString;
 };
@@ -13,12 +17,87 @@ const getIdByIdx = (string, idx) => {
 
 const getTagOfIdx = (string, idx) => {
   let cutString = string.substring(string.lastIndexOf('<', idx));
-  cutString = cutString.substring(0, cutString.indexOf('>'));
+  cutString = cutString.substring(0, cutString.indexOf('>') + 1);
   return cutString;
+};
+
+const getRootTestFile = () => {
+  const pathToBaseTest = '../data/base-files/cytestion-base.spec.js';
+  return fs
+    .readFileSync(path_project.resolve(__dirname, pathToBaseTest))
+    .toString();
+};
+
+const dataProcessor = (codeList) => {
+  return codeList.map((elem) => {
+    const obj = {};
+    obj.codeText = elem;
+    obj.actualId = getContentBetween(elem, 'const actualId = [', '];')
+      .replace(/'/g, '')
+      .split(',');
+    return obj;
+  });
+};
+
+const readTmpFiles = (codeList, filesTmp) => {
+  const filteredFilesTmp = filesTmp.filter((file) =>
+    codeList.map((elem) => elem.actualId.join('->')).includes(file)
+  );
+  const result = [];
+  const pathToTmp = '../tmp/';
+  filteredFilesTmp.forEach((file) => {
+    const obj = {};
+    obj.name = file;
+    obj.content = fs
+      .readFileSync(path_project.resolve(__dirname, pathToTmp) + '/' + file)
+      .toString();
+
+    search.searchContent(obj, getIdByIdx, getTagOfIdx);
+    result.push(obj);
+  });
+  return result;
+};
+
+const canContinue = (code, filesTmp) => {
+  const actualFile = filesTmp.find(
+    (file) => file.name === code.actualId.join('->')
+  );
+  const parentFile = filesTmp.find(
+    (file) =>
+      file.name ===
+      code.actualId
+        .filter((el, idx) => idx < code.actualId.length - 1)
+        .join('->')
+  );
+
+  if (actualFile && parentFile) {
+    if (actualFile.content === parentFile.content) return false;
+  }
+  return true;
+};
+
+const willNotGenerateDuplicate = (actualString, actualId, codes, newCodes) => {
+  const actualStringWithoutNumber = actualString.replace(/[0-9]/g, '');
+
+  return (
+    !codes.some((code) =>
+      code.codeText
+        .replace(/[0-9]/g, '')
+        .includes(actualId.replace(/[0-9]/g, '') + "'];")
+    ) &&
+    !newCodes.some((code) =>
+      code.replace(/[0-9]/g, '').includes(actualStringWithoutNumber)
+    )
+  );
 };
 
 module.exports = {
   getContentBetween,
   getIdByIdx,
   getTagOfIdx,
+  getRootTestFile,
+  dataProcessor,
+  readTmpFiles,
+  canContinue,
+  willNotGenerateDuplicate,
 };
