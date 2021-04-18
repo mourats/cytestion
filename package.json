@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "generate-files": "node ./src/main.js",
-    "test": "cypress open",
+    "cypress": "cypress open",
     "test-file": "cypress run -s"
   },
   "repository": {

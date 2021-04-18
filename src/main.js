@@ -21,8 +21,7 @@ const generateCode = () => {
     fs.writeFileSync(fileTest, rootFile);
     // execSync(`npm run test-file ${fileTest}`);
   } else {
-    const a = fs.readFileSync(fileTest).toString();
-    const contentTestFile = a;
+    const contentTestFile = fs.readFileSync(fileTest).toString();
     const codeList = contentTestFile.split('//--CODE--');
 
     const header = codeList.shift();
@@ -68,6 +67,7 @@ const generateCode = () => {
       // execSync(`npm run test-file ${fileTest}`);
     } else {
       execSync(`rm -v ${path_project.resolve(__dirname, pathToTmp)}/*`);
+      // util.clearFileTest(fileTest, contentTestFile)
     }
   }
 };
