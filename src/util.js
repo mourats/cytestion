@@ -59,6 +59,8 @@ const readTmpFiles = (codeList, filesTmp) => {
 };
 
 const canContinue = (code, filesTmp) => {
+  if (code.codeText.includes('skip')) return false;
+
   const actualFile = filesTmp.find(
     (file) => file.name === code.actualId.join('->')
   );
@@ -91,6 +93,12 @@ const willNotGenerateDuplicate = (actualString, actualId, codes, newCodes) => {
   );
 };
 
+const putSkipInTests = (codeList) => {
+  codeList.forEach((code) => {
+    code.codeText = code.codeText.replace(/ it\('/g, " it.skip('");
+  });
+};
+
 module.exports = {
   getContentBetween,
   getIdByIdx,
@@ -100,4 +108,5 @@ module.exports = {
   readTmpFiles,
   canContinue,
   willNotGenerateDuplicate,
+  putSkipInTests,
 };
