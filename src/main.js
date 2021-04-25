@@ -54,17 +54,18 @@ const generateCode = () => {
       }
     });
 
-    let result = [];
-    result.push(header);
-    result.push(...codeListProcessed.map((elem) => elem.codeText));
-    result.push(...newCodes);
-    result.push(footer);
     if (newCodes.length > 0) {
+      util.putSkipInTests(codeListProcessed);
+      let result = [];
+      result.push(header);
+      result.push(...codeListProcessed.map((elem) => elem.codeText));
+      result.push(...newCodes);
+      result.push(footer);
       fs.writeFileSync(fileTest, result.join('//--CODE--'));
       execSync(`yarn test-file ${fileTest}`);
     } else {
       execSync(`rm -v ${path_project.resolve(__dirname, pathToTmp)}/*`);
-      // util.clearFileTest(fileTest, contentTestFile)
+      // util.clearFileTest(fileTest, contentTestFile);
     }
   }
 };
