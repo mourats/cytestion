@@ -19,7 +19,7 @@ const generateCode = () => {
     fs.mkdirSync(`${pathTestFile}/${date}/`, { recursive: true });
     const rootFile = util.getRootTestFile();
     fs.writeFileSync(fileTest, rootFile);
-    // execSync(`npm run test-file ${fileTest}`);
+    execSync(`yarn test-file ${fileTest}`);
   } else {
     const contentTestFile = fs.readFileSync(fileTest).toString();
     const codeList = contentTestFile.split('//--CODE--');
@@ -34,11 +34,6 @@ const generateCode = () => {
       .readdirSync(path_project.resolve(__dirname, pathToTmp))
       .filter((file) => file !== '.gitkeep');
 
-    //remove if ids was not visible
-    codeListProcessed = codeListProcessed.filter((code) =>
-      filesTmp.includes(code.actualId.join('->'))
-    );
-
     const filesTmpRead = util.readTmpFiles(codeListProcessed, filesTmp);
 
     let newCodes = [];
@@ -48,12 +43,14 @@ const generateCode = () => {
           (file) => file.name === code.actualId.join('->')
         );
 
-        generate.generateNewTestCodes(
-          code,
-          actualFile,
-          codeListProcessed,
-          newCodes
-        );
+        if (actualFile) {
+          generate.generateNewTestCodes(
+            code,
+            actualFile,
+            codeListProcessed,
+            newCodes
+          );
+        }
       }
     });
 
@@ -64,7 +61,7 @@ const generateCode = () => {
     result.push(footer);
     if (newCodes.length > 0) {
       fs.writeFileSync(fileTest, result.join('//--CODE--'));
-      // execSync(`npm run test-file ${fileTest}`);
+      execSync(`yarn test-file ${fileTest}`);
     } else {
       execSync(`rm -v ${path_project.resolve(__dirname, pathToTmp)}/*`);
       // util.clearFileTest(fileTest, contentTestFile)
