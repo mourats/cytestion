@@ -130,19 +130,18 @@ const getCorrectTest = (element) => {
     } else if (element.tag.includes('email')) {
       value = faker.internet.email();
     }
-    return `cy.get('[${element.typeId}"${element.id}"]').click().clearThenType('${value}');\n`;
+    return `cy.fillInput('[${element.typeId}"${element.id}"]', '${value}');\n`;
   } else if (element.classId === 'input-number') {
-    return `cy.get('[${element.typeId}"${
+    return `cy.fillInput('[${element.typeId}"${
       element.id
-    }"]').click().clearThenType('${faker.datatype.number({
+    }"]', '${faker.datatype.number({
       min: 1,
       max: 10,
     })}');\n`;
   } else if (element.classId === 'input-select') {
-    return `cy.get('[${element.typeId}"${element.id}"]').click({ force: true }).wait(50).type('{enter}');\n`;
+    return `cy.fillInputSelect('[${element.typeId}"${element.id}"]');\n`;
   } else if (element.classId === 'input-picker') {
-    return `cy.get('[${element.typeId}"${element.id}"]').click();
-    cy.clickIfExistClass('[class="ant-picker-cell-inner"]');;\n`;
+    return `cy.fillInputDate('[${element.typeId}"${element.id}"]', '[class="ant-picker-cell-inner"]');\n`;
   }
 };
 
