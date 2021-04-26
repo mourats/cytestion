@@ -19,7 +19,7 @@ const generateCode = () => {
     fs.mkdirSync(`${pathTestFile}/${date}/`, { recursive: true });
     const rootFile = util.getRootTestFile();
     fs.writeFileSync(fileTest, rootFile);
-    execSync(`yarn test-file ${fileTest}`);
+    // execSync(`yarn test-file ${fileTest}`);
   } else {
     const contentTestFile = fs.readFileSync(fileTest).toString();
     const codeList = contentTestFile.split('//--CODE--');
@@ -62,7 +62,7 @@ const generateCode = () => {
       result.push(...newCodes);
       result.push(footer);
       fs.writeFileSync(fileTest, result.join('//--CODE--'));
-      execSync(`yarn test-file ${fileTest}`);
+      // execSync(`yarn test-file ${fileTest}`);
     } else {
       execSync(`rm -v ${path_project.resolve(__dirname, pathToTmp)}/*`);
       // util.clearFileTest(fileTest, contentTestFile);

@@ -107,7 +107,7 @@ const putClassClickSnippet = (codeText, classId, typeId) => {
 const putIdFormSnippet = (codeText, idsForm) => {
   let fillingCode = '';
   idsForm.forEach((elem) => (fillingCode += getCorrectTest(elem)));
-  fillingCode += `cy.get('.ant-form').submit();\n`;
+  fillingCode += `cy.submitIfExist('.ant-form');\n`;
 
   return codeText.replace('cy.writeContent(actualId, window);\n', fillingCode);
 };
