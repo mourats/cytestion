@@ -13,12 +13,14 @@ Cypress.Commands.add(
 Cypress.Commands.add('clickIfExist', (element) => {
   cy.get('body').then((body) => {
     if (body.find(element).length > 0) {
-      cy.get(element).then(($id) => {
-        if ($id.is(':visible')) {
-          $id.click();
-          cy.wait(200);
-        }
-      });
+      cy.get(element)
+        .first()
+        .then(($id) => {
+          if ($id.is(':visible')) {
+            $id.click();
+            cy.wait(200);
+          }
+        });
     }
   });
 });
@@ -26,9 +28,53 @@ Cypress.Commands.add('clickIfExist', (element) => {
 Cypress.Commands.add('clickIfExistClass', (element) => {
   cy.get('body').then((body) => {
     if (body.find(element).length > 0) {
-      cy.get(element).then((classId) => {
-        classId[0].click();
+      cy.get(element).first().click();
+      cy.wait(200);
+    }
+  });
+});
+
+Cypress.Commands.add('fillInput', (element, value) => {
+  cy.get('body').then((body) => {
+    if (body.find(element).length > 0) {
+      cy.get(element).then(($id) => {
+        if ($id.is(':visible')) {
+          cy.get(element).click().clearThenType(value);
+        }
       });
+    }
+  });
+});
+
+Cypress.Commands.add('fillInputSelect', (element) => {
+  cy.get('body').then((body) => {
+    if (body.find(element).length > 0) {
+      cy.get(element).then(($id) => {
+        if ($id.is(':visible')) {
+          cy.get(element).click({ force: true }).wait(50).type('{enter}');
+        }
+      });
+    }
+  });
+});
+
+Cypress.Commands.add('fillInputDate', (element, classToPick) => {
+  cy.get('body').then((body) => {
+    if (body.find(element).length > 0) {
+      cy.get(element).then(($id) => {
+        if ($id.is(':visible')) {
+          cy.get(element).click();
+          cy.clickIfExistClass(classToPick);
+        }
+      });
+    }
+  });
+});
+
+Cypress.Commands.add('submitIfExist', (element) => {
+  cy.get('body').then((body) => {
+    if (body.find(element).length > 0) {
+      cy.get(element).first().submit();
       cy.wait(200);
     }
   });

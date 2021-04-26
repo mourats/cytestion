@@ -1,8 +1,12 @@
 const fs = require('fs');
 const path_project = require('path');
 const ahocorasick = require('ahocorasick');
-const ac = new ahocorasick(['id=', 'class=']);
 const filters = require('./ant-design-filters');
+let rawdata = fs.readFileSync(
+  path_project.resolve(__dirname, '../data/ant-design/identifiers.json')
+);
+const identifiers = JSON.parse(rawdata).identifiers;
+const ac = new ahocorasick(identifiers);
 
 const searchContent = (obj, getIdByIdx, getTagOfIdx) => {
   const listResult = ac.search(obj.content);
@@ -19,10 +23,21 @@ const searchContent = (obj, getIdByIdx, getTagOfIdx) => {
   idStrings = filters.filterNotClickablePanel(idStrings);
   idStrings = filters.filterNotButtonClass(idStrings);
 
-  //remove duplicates
+  //remove duplicates and make priority
   let idStringUnique = [];
   idStrings.forEach((curr) => {
-    if (!idStringUnique.find((elem) => elem.id === curr.id)) {
+    let bestId;
+    bestId =
+      idStrings.find(
+        (elem) => elem.tag === curr.tag && elem.typeId === identifiers[0]
+      ) ||
+      idStrings.find(
+        (elem) => elem.tag === curr.tag && elem.typeId === identifiers[1]
+      ) ||
+      idStrings.find(
+        (elem) => elem.tag === curr.tag && elem.typeId === identifiers[2]
+      );
+    if (!idStringUnique.find((elem) => elem.tag === bestId.tag)) {
       idStringUnique.push(curr);
     }
   });
@@ -34,7 +49,7 @@ const searchContent = (obj, getIdByIdx, getTagOfIdx) => {
   idStringUnique.forEach((elem) => {
     if (elem.typeId === 'class=') {
       obj.classClick.push(elem);
-    } else if (elem.typeId === 'id=') {
+    } else {
       if (elem.tag.includes('<input')) {
         processTypeForm(elem, obj, getIdByIdx);
       } else {
