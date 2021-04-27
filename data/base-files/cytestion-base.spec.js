@@ -9,6 +9,6 @@ describe('Automatic generated test file to click on elements on the page', () =>
   });
   //--CODE--
   after(() => {
-    cy.exec('npm run generate-test');
+    cy.exec('yarn generate-test', { timeout: 600000 });
   });
 });
