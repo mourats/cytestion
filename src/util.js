@@ -102,6 +102,27 @@ const putSkipInTests = (codeList) => {
   });
 };
 
+const filterAndClearCodeList = (codeList, result = []) => {
+  if (codeList.length > 0) {
+    const turnCode = codeList.shift();
+    const isSubset = [...result, ...codeList].some((code) =>
+      turnCode.actualId.every((id) => code.actualId.includes(id))
+    );
+    if (!isSubset) {
+      turnCode.codeText = turnCode.codeText
+        .replace(/ it.skip\('/g, " it('")
+        .replace(/cy.writeContent(actualId, window);\n/g, '')
+        .replace('cy.writeContent(actualId, window);', '')
+        .replace(/^.*const actualId = .*$\n/gm, '')
+        .replace('.then((window)', '.then(()');
+      result.push(turnCode);
+    }
+    return filterAndClearCodeList(codeList, result);
+  } else {
+    return result;
+  }
+};
+
 module.exports = {
   getContentBetween,
   getIdByIdx,
@@ -112,4 +133,5 @@ module.exports = {
   canContinue,
   willNotGenerateDuplicate,
   putSkipInTests,
+  filterAndClearCodeList,
 };

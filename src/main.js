@@ -19,7 +19,7 @@ const generateCode = () => {
     fs.mkdirSync(`${pathTestFile}/${date}/`, { recursive: true });
     const rootFile = util.getRootTestFile();
     fs.writeFileSync(fileTest, rootFile);
-    // execSync(`yarn test-file ${fileTest}`);
+    execSync(`yarn test-file ${fileTest}`);
   } else {
     const contentTestFile = fs.readFileSync(fileTest).toString();
     const codeList = contentTestFile.split('//--CODE--');
@@ -55,6 +55,7 @@ const generateCode = () => {
     });
 
     if (newCodes.length > 0) {
+      //generate new tests
       util.putSkipInTests(codeListProcessed);
       let result = [];
       result.push(header);
@@ -62,10 +63,21 @@ const generateCode = () => {
       result.push(...newCodes);
       result.push(footer);
       fs.writeFileSync(fileTest, result.join('//--CODE--'));
-      // execSync(`yarn test-file ${fileTest}`);
+      execSync(`yarn test-file ${fileTest}`);
     } else {
-      execSync(`rm -v ${path_project.resolve(__dirname, pathToTmp)}/*`);
-      // util.clearFileTest(fileTest, contentTestFile);
+      //clear final tests
+      if (filesTmp.length > 0) {
+        execSync(`rm -v ${path_project.resolve(__dirname, pathToTmp)}/*`);
+      }
+      let result = [];
+      const codeListProcessedFiltered = util.filterAndClearCodeList(
+        codeListProcessed
+      );
+      result.push(header);
+      result.push(...codeListProcessedFiltered.map((elem) => elem.codeText));
+      result.push('\n});');
+      fs.writeFileSync(fileTest, result.join(''));
+      execSync(`yarn format-file ${fileTest}`, { stdio: 'pipe' });
     }
   }
 };
