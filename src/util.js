@@ -79,16 +79,19 @@ const canContinue = (code, filesTmp) => {
 };
 
 const willNotGenerateDuplicate = (actualString, actualId, codes, newCodes) => {
-  const actualStringWithoutNumber = actualString.replace(/[0-9]/g, '');
-
+  const actualIdWithoutVariant = actualId.replace(/rc-tabs-[0-9]+/g, '');
+  const actualStringWithoutVariant = actualString.replace(
+    /rc-tabs-[0-9]+/g,
+    ''
+  );
   return (
     !codes.some((code) =>
       code.codeText
-        .replace(/[0-9]/g, '')
-        .includes(actualId.replace(/[0-9]/g, '') + "'];")
+        .replace(/rc-tabs-[0-9]+/g, '')
+        .includes(actualIdWithoutVariant + "'];")
     ) &&
     !newCodes.some((code) =>
-      code.replace(/[0-9]/g, '').includes(actualStringWithoutNumber)
+      code.replace(/rc-tabs-[0-9]+/g, '').includes(actualStringWithoutVariant)
     )
   );
 };
