@@ -104,7 +104,7 @@ const putSkipInTests = (codeList) => {
 
 const filterAndClearCodeList = (codeList, result = []) => {
   if (codeList.length > 0) {
-    const turnCode = codeList.pop();
+    const turnCode = codeList.shift();
     const isSubset = [...result, ...codeList].some((code) =>
       turnCode.actualId.every((id) => code.actualId.includes(id))
     );
