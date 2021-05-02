@@ -4,7 +4,8 @@
   "description": "Cypress Code Test Generation",
   "main": "main.js",
   "scripts": {
-    "generate-test": "node ./src/main.js",
+    "generate-test": "node entrypoint.js",
+    "start-generate": "node ./src/main.js",
     "cypress": "cypress open",
     "test-file": "cypress run -s",
     "format-file": "prettier-eslint --write"
@@ -26,9 +27,12 @@
   "homepage": "https://github.com/mourats/cytestion#readme",
   "dependencies": {
     "ahocorasick": "^1.0.2",
+    "cross-spawn": "^7.0.2",
     "cypress": "^6.8.0",
     "faker": "^5.5.3",
     "fs": "0.0.1-security",
+    "inquirer": "^7.1.0",
+    "ora": "^4.0.4",
     "prettier": "^2.2.1",
     "prettier-eslint": "^12.0.0",
     "prettier-eslint-cli": "^5.0.0"
