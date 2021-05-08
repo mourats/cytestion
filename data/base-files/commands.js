@@ -6,7 +6,7 @@ Cypress.Commands.add(
   'clearThenType',
   { prevSubject: true },
   (subject, text) => {
-    cy.wrap(subject).clear().type(text);
+    cy.wrap(subject).clear().type(text).should('have.value', text);
   }
 );
 
