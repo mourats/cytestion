@@ -5,6 +5,7 @@ describe('Automatic generated test file to click on elements on the page', () =>
     cy.visit('/').then((window) => {
       cy.wait(200);
       cy.writeContent(actualId, window);
+      cy.get('@consoleError').should('not.be.called');
     });
   });
   //--CODE--
