@@ -156,7 +156,7 @@ const generateTests = () => {
 const printPrettyWelcome = () => {
   console.info(
     '\033[1;92mWelcome to Cytestion!\033[0;0m ' +
-      'Automatic exploratory test code generator, using the cypress framework'
+      'Automatic ad-hoc test code generator, using the cypress framework'
   );
 };
 

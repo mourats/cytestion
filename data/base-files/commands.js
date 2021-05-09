@@ -51,7 +51,11 @@ Cypress.Commands.add('fillInputSelect', (element) => {
     if (body.find(element).length > 0) {
       cy.get(element).then(($id) => {
         if ($id.is(':visible')) {
-          cy.get(element).click({ force: true }).wait(50).type('{enter}');
+          cy.get(element)
+            .click({ force: true })
+            .wait(50)
+            .type('{downarrow}')
+            .type('{enter}');
         }
       });
     }

@@ -1,35 +1,34 @@
-# Guia para utilização do cytestion
+# Guide for using cytestion
 
-Gerador de código de teste end-to-end, utilizando a framework [cypress](https://www.cypress.io/). Ele deve ser incluído como um submodulo, usualmente com `git submodule`, de uma aplicação web, alvo da realização dos testes exploratórios.
+End-to-end test code generator, using the [cypress](https://www.cypress.io/) framework. It must be included as a [submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules), of a web application, which is the target of performing ad-hoc tests.
 
+## Dependencies
 
-## Dependências
+##### It is necessary to have [Node.js](https://nodejs.org/en/) and [Yarn](https://yarnpkg.com/) installed.
+##### It is necessary to run in a web application, using the [Ant Desing](https://ant.design/) component library .
 
-##### É necessário ter o [Node.js](https://nodejs.org/en/) e [Yarn](https://yarnpkg.com/) instalados.
-##### É necessário executar em uma aplicação web, utilizando a biblioteca de componentes do [Ant Desing](https://ant.design/).
+Install the project's dependencies, like this:
 
-Instalar as dependências do projeto, assim:
-```
+``
 yarn
-```
+``
 
-## Execução
+## Execution
 
-A execução do cytestion é bem simples basta executar a geração de testes, assim:
-```
+The execution of cytestion is very simple, just run the test generation, like this:
+``
 yarn generate-test
-```
+``
+##### Important:
 
-##### Importante:
+In the first run, it will be necessary to inform the `baseUrl` that will be placed in the` cypress.json` file. In addition, the cypress dependency directory, already installed, will be created and the `commands.js` and` index.js` files, containing necessary functions, will be placed in the `cypress/support` path.
 
-Na primeira execução, será necessário informar a `baseUrl` que será colocada no arquivo `cypress.json`. Além disso, o diretório da dependência cypress, já instalado, será criado e os arquivos `commands.js` e `index.js`, contendo funções necessárias, serão colocados no path `cypress/support`. 
+The generated artifact will be a test file called `cytestion.spec.js`, found in the path` cypress/integration/`.
 
-O artefato gerado será um arquivo de teste chamado `cytestion.spec.js`, encontrado no path `cypress/integration/`.
+## Details
 
-## Detalhes
+The test generation process works as follows, an initial visit is made to the base url provided, after that, the html found on the page is analyzed and, selectively, new tests are created, from the identifiers `['id =', 'data-cy=', 'class=']` found. The final objective is to go through all possible paths by means of click and fill out the forms found, making your submission.
 
-O processo de geração dos testes funciona da seguinte forma, uma visita incial é feita na url base fornecida, após isso, o html encontrado na página é analisado e, de forma seletiva, novos testes são criados, a partir dos identificadores `id=` encontrados. O objetivo final é percorrer todos os caminhos possíveis por meios de click e preencher os formulários encontrados, fazendo sua submissão.
-
-##### O processo de explorar os testes é feito pela execução em linha de comando, mas para exemplificar o que acontece, veja o gif:
+##### The test generation process is done by running it on the command line, but to exemplify what happens, see the gif:
 
 ![Alt Text](data/gif-readme/generate-test.gif)
