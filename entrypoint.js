@@ -184,8 +184,8 @@ const infoPrettyPrint = (message) => {
 };
 
 const onError = (error) => {
-  console.error('Error at stage', currentStage.name);
-  console.error(error.toString());
+  console.log('Error at stage', currentStage.name);
+  console.log(error.toString());
   process.exit(1);
 };
 
