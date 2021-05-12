@@ -88,7 +88,7 @@ const verifyOrCreateDirectoryAndUtilFiles = () => {
 
   if (!configFileExists) {
     rl.question(
-      'cypress.json file does not exist or does not contain baseUrl property. What is the url address? (e.g. http://localhost:3000/{application-name})\n> ',
+      'cypress.json file does not exist or does not contain baseUrl property.\nWhat is the url address? (e.g. http://localhost:3000/{application-name})\n> ',
       (applicationUrl) => {
         const configFile = { baseUrl: applicationUrl };
         fs.writeFileSync('cypress.json', JSON.stringify(configFile));
