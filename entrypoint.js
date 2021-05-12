@@ -23,6 +23,10 @@ const verifyOrCreateDirectoryAndUtilFiles = () => {
     fs.mkdirSync('cypress/support', { recursive: true });
   }
 
+  if (!fs.existsSync('cypress/plugins')) {
+    fs.mkdirSync('cypress/plugins', { recursive: true });
+  }
+
   if (!fs.existsSync('cypress/integration')) {
     fs.mkdirSync('cypress/integration', { recursive: true });
   }
@@ -32,7 +36,9 @@ const verifyOrCreateDirectoryAndUtilFiles = () => {
     Object.keys(JSON.parse(fs.readFileSync('cypress.json'))).includes(
       'baseUrl'
     );
-  const indexFileBase = fs.readFileSync('data/base-files/index.js').toString();
+  const indexFileBase = fs
+    .readFileSync('data/base-files/support.index.js')
+    .toString();
   const indexFileExists =
     fs.existsSync('cypress/support/index.js') &&
     fs
@@ -41,7 +47,7 @@ const verifyOrCreateDirectoryAndUtilFiles = () => {
       .includes(indexFileBase);
 
   const commandsFileBase = fs
-    .readFileSync('data/base-files/commands.js')
+    .readFileSync('data/base-files/support.commands.js')
     .toString();
   const commandsFileExists =
     fs.existsSync('cypress/support/commands.js') &&
@@ -49,6 +55,16 @@ const verifyOrCreateDirectoryAndUtilFiles = () => {
       .readFileSync('cypress/support/commands.js')
       .toString()
       .includes(commandsFileBase);
+
+  const indexPluginBase = fs
+    .readFileSync('data/base-files/plugins.index.js')
+    .toString();
+  const indexPluginExists =
+    fs.existsSync('cypress/plugins/index.js') &&
+    fs
+      .readFileSync('cypress/plugins/index.js')
+      .toString()
+      .includes(indexPluginBase);
 
   const supportFilesCheck = () => {
     if (!indexFileExists) {
@@ -64,6 +80,9 @@ const verifyOrCreateDirectoryAndUtilFiles = () => {
       );
       console.log('Copying the file from the base directory');
       fs.writeFileSync('cypress/support/commands.js', commandsFileBase);
+    }
+    if (!indexPluginExists) {
+      fs.writeFileSync('cypress/plugins/index.js', indexPluginBase);
     }
   };
 
