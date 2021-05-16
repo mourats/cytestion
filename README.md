@@ -1,4 +1,4 @@
-# Guide for using cytestion
+# Guide for using Cytestion
 
 End-to-end test code generator, using the [cypress](https://www.cypress.io/) framework. It must be included as a [submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules), of a web application, which is the target of performing ad-hoc tests.
 
@@ -9,17 +9,17 @@ End-to-end test code generator, using the [cypress](https://www.cypress.io/) fra
 
 Install the project's dependencies, like this:
 
-``
+```
 yarn
-``
+```
 
 ## Execution
 
 The execution of cytestion is very simple, just run the test generation, like this:
 
-``
+```
 yarn generate-test
-``
+```
 ##### Important:
 
 In the first run, it will be necessary to inform the `baseUrl` that will be placed in the` cypress.json` file. In addition, the cypress dependency directory, already installed, will be created and the `commands.js` and` index.js` files, containing necessary functions, will be placed in the `cypress/support` path.

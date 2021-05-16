@@ -1,5 +1,7 @@
-Cypress.Commands.add('writeContent', (actualId, window) => {
-  cy.writeFile(`tmp/${actualId.join('->')}`, window.document.body.outerHTML);
+Cypress.Commands.add('writeContent', (actualId) => {
+  cy.window().then((win) => {
+    cy.writeFile(`tmp/${actualId.join('->')}`, win.document.body.outerHTML);
+  });
 });
 
 Cypress.Commands.add(

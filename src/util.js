@@ -114,7 +114,6 @@ const filterAndClearCodeList = (codeList, result = []) => {
         .replace(/cy.writeContent(actualId, window);\n/g, '')
         .replace('cy.writeContent(actualId, window);', '')
         .replace(/^.*const actualId = .*$\n/gm, '')
-        .replace('.then((window)', '.then(()')
         .replace(/^\s*[\r\n]/gm, '');
       result.push(turnCode);
     }

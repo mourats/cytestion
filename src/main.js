@@ -70,9 +70,8 @@ const generateCode = () => {
         execSync(`rm -v ${path_project.resolve(__dirname, pathToTmp)}/*`);
       }
       let result = [];
-      const codeListProcessedFiltered = util.filterAndClearCodeList(
-        codeListProcessed
-      );
+      const codeListProcessedFiltered =
+        util.filterAndClearCodeList(codeListProcessed);
       result.push(header);
       result.push(...codeListProcessedFiltered.map((elem) => elem.codeText));
       result.push('\n});');
