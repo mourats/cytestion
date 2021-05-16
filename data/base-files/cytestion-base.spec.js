@@ -6,7 +6,7 @@ describe('Automatic generated test file to click on elements on the page', () =>
   //--CODE--
   it('Visits index page', () => {
     const actualId = ['root'];
-    cy.writeContent(actualId, window);
+    cy.writeContent(actualId);
     cy.get('@consoleError').should('not.be.called');
   });
   //--CODE--
