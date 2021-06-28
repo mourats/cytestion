@@ -20,7 +20,7 @@ Cypress.Commands.add('clickIfExist', (element) => {
         .then(($id) => {
           if ($id.is(':visible')) {
             $id.click();
-            cy.wait(200);
+            cy.waitUntilAllAPIFinished();
           }
         });
     }
@@ -31,7 +31,7 @@ Cypress.Commands.add('clickIfExistClass', (element) => {
   cy.get('body').then((body) => {
     if (body.find(element).length > 0) {
       cy.get(element).first().click();
-      cy.wait(200);
+      cy.waitUntilAllAPIFinished();
     }
   });
 });
@@ -81,7 +81,17 @@ Cypress.Commands.add('submitIfExist', (element) => {
   cy.get('body').then((body) => {
     if (body.find(element).length > 0) {
       cy.get(element).first().submit();
-      cy.wait(200);
+      cy.waitUntilAllAPIFinished();
     }
+  });
+});
+
+Cypress.Commands.add('waitUntilAllAPIFinished', () => {
+  cy.get('body', { timeout: 60 * 1000, log: false }).should(() => {
+    expect(
+      cy._data.api.pendingAPICount,
+      'Waiting for pending API requests'
+    ).to.eq(0);
+    cy.wait(50);
   });
 });

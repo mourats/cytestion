@@ -1,7 +1,7 @@
 describe('Automatic generated test file to click on elements on the page', () => {
   beforeEach(() => {
     cy.visit('/');
-    cy.wait(200);
+    cy.waitUntilAllAPIFinished();
   });
   //--CODE--
   it('Visits index page', () => {
@@ -11,6 +11,6 @@ describe('Automatic generated test file to click on elements on the page', () =>
   });
   //--CODE--
   after(() => {
-    cy.exec('yarn start-generate', { timeout: 600000 });
+    cy.exec('yarn start-generate', { timeout: 3600000 });
   });
 });

@@ -1,4 +1,6 @@
 import './commands';
+import './test-setup';
+
 const resizeObserverLoopErrRe = /^[^(ResizeObserver loop limit exceeded)]/;
 
 Cypress.on('uncaught:exception', (err) => {
