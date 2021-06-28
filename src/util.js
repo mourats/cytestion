@@ -111,8 +111,8 @@ const filterAndClearCodeList = (codeList, result = []) => {
     if (!isSubset) {
       turnCode.codeText = turnCode.codeText
         .replace(/ it.skip\('/g, " it('")
-        .replace(/cy.writeContent(actualId, window);\n/g, '')
-        .replace('cy.writeContent(actualId, window);', '')
+        .replace(/cy.writeContent(actualId);\n/g, '')
+        .replace('cy.writeContent(actualId);', '')
         .replace(/^.*const actualId = .*$\n/gm, '')
         .replace(/^\s*[\r\n]/gm, '');
       result.push(turnCode);

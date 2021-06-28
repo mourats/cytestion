@@ -4,6 +4,7 @@ const spawn = require('cross-spawn');
 const readline = require('readline');
 const { execSync } = require('child_process');
 const ora = require('ora');
+const path_project = require('path');
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -133,7 +134,7 @@ const checkTestsAlreadyGenerate = async () => {
           .readdirSync('tmp/')
           .filter((file) => file !== '.gitkeep');
         if (filesTmp.length > 0)
-          execSync(`rm -v ${path_project.resolve(__dirname, pathToTmp)}/*`);
+          execSync(`rm -v ${path_project.resolve(__dirname, fileTest)}`);
       } else if (promptedModule.selectedOption === 'Abort the generation') {
         process.exit(0);
       }
@@ -216,8 +217,7 @@ const stages = [
   },
   {
     id: 2,
-    name:
-      'Checks if the tests have already been generated today, enabling overwriting',
+    name: 'Checks if the tests have already been generated today, enabling overwriting',
     func: checkTestsAlreadyGenerate,
   },
   {

@@ -94,23 +94,23 @@ const generateIdsForm = (code, idsForm, codes, newCodes) => {
 
 const putIdClickSnippet = (codeText, id, typeId) => {
   const clickCode = `cy.clickIfExist('[${typeId}"${id}"]');
-      cy.writeContent(actualId, window);\n`;
-  return codeText.replace('cy.writeContent(actualId, window);\n', clickCode);
+      cy.writeContent(actualId);\n`;
+  return codeText.replace('cy.writeContent(actualId);\n', clickCode);
 };
 
 const putClassClickSnippet = (codeText, classId, typeId) => {
   const clickCode = `cy.clickIfExistClass('[${typeId}"${classId}"]');
-      cy.writeContent(actualId, window);\n`;
-  return codeText.replace('cy.writeContent(actualId, window);\n', clickCode);
+      cy.writeContent(actualId);\n`;
+  return codeText.replace('cy.writeContent(actualId);\n', clickCode);
 };
 
 const putIdFormSnippet = (codeText, idsForm) => {
   let fillingCode = '';
   idsForm.forEach((elem) => (fillingCode += getCorrectTest(elem)));
   fillingCode += `cy.submitIfExist('.ant-form');\n
-      cy.writeContent(actualId, window);\n`;
+      cy.writeContent(actualId);\n`;
 
-  return codeText.replace('cy.writeContent(actualId, window);\n', fillingCode);
+  return codeText.replace('cy.writeContent(actualId);\n', fillingCode);
 };
 
 const getCorrectTest = (element) => {
