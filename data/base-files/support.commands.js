@@ -18,8 +18,8 @@ Cypress.Commands.add('clickIfExist', (element) => {
       cy.get(element)
         .first()
         .then(($id) => {
-          if ($id.is(':visible')) {
-            $id.click();
+          if ($id.is(':visible') && !$id.is(':disabled')) {
+            $id.click({ force: true });
             cy.waitUntilAllAPIFinished();
           }
         });
@@ -30,7 +30,7 @@ Cypress.Commands.add('clickIfExist', (element) => {
 Cypress.Commands.add('clickIfExistClass', (element) => {
   cy.get('body').then((body) => {
     if (body.find(element).length > 0) {
-      cy.get(element).first().click();
+      cy.get(element).first().click({ force: true });
       cy.waitUntilAllAPIFinished();
     }
   });
@@ -40,8 +40,8 @@ Cypress.Commands.add('fillInput', (element, value) => {
   cy.get('body').then((body) => {
     if (body.find(element).length > 0) {
       cy.get(element).then(($id) => {
-        if ($id.is(':visible')) {
-          cy.get(element).click().clearThenType(value);
+        if ($id.is(':visible') && !$id.is(':disabled')) {
+          cy.get(element).click({ force: true }).clearThenType(value);
         }
       });
     }
@@ -52,7 +52,7 @@ Cypress.Commands.add('fillInputSelect', (element) => {
   cy.get('body').then((body) => {
     if (body.find(element).length > 0) {
       cy.get(element).then(($id) => {
-        if ($id.is(':visible')) {
+        if ($id.is(':visible') && !$id.is(':disabled')) {
           cy.get(element)
             .click({ force: true })
             .wait(50)
@@ -68,8 +68,8 @@ Cypress.Commands.add('fillInputDate', (element, classToPick) => {
   cy.get('body').then((body) => {
     if (body.find(element).length > 0) {
       cy.get(element).then(($id) => {
-        if ($id.is(':visible')) {
-          cy.get(element).click();
+        if ($id.is(':visible') && !$id.is(':disabled')) {
+          cy.get(element).click({ force: true });
           cy.clickIfExistClass(classToPick);
         }
       });
