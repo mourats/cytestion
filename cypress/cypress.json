@@ -1,0 +1,11 @@
+{
+  "baseUrl": "http://localhost:3000",
+  "viewportWidth": 1280,
+  "viewportHeight": 720,
+  "env": {
+    "forceAPIRecording": true,
+    "apiHosts": "/*",
+    "stubAPIPatterns": "/*",
+    "apiMaxWaitingTime": 60000
+  }
+}

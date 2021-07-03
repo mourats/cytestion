@@ -9,8 +9,12 @@ node_modules
 
 npm-debug.log*
 
-# cypress dependence
-cypress
-cypress.json
+# cypress local files
+cypress/integration
+cypress/fixtures
+cypress/screenshots
+cypress/screenshots
+cypress/videos
+
 
 tmp/*
