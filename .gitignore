@@ -16,5 +16,4 @@ cypress/screenshots
 cypress/screenshots
 cypress/videos
 
-
 tmp/*

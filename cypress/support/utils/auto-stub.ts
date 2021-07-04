@@ -13,13 +13,12 @@ function increaseAPICountOnRequestStart() {
  * Whenever a request is finished, update `pendingAPICount` accordingly.
  */
 function decreaseAPICountOnRequestFinish() {
-  const { isAPIRecording } = cy._config;
   /**
    * Sometimes there are some time windows between API requests, e.g. Request1 finishes,
    * but Request2 starts after 100ms, in this case, `cy.waitUntilAllAPIFinished()` would
    * not work correctly, so when we decrease the counter, we need to have a delay here.
    */
-  const delayTime = 50;
+  const delayTime = 200;
   if (cy._data.api.pendingAPICount === 1) {
     setTimeout(() => {
       cy._data.api.pendingAPICount -= 1;
@@ -66,18 +65,12 @@ function routeHandlerWithMockResponse(
  * Setup cypress interception to make sure API recording, API wait working.
  */
 export function setupCypressInterception() {
-  const { fixtureName } = getTestCaseInfo();
   cy._data.api = {
     records: [],
     pendingAPICount: 0,
   };
-  const { isAPIRecording, isAPISnapshotUsed } = cy._config;
 
-  cy.log(`API Recording: ${isAPIRecording ? 'ON' : 'OFF'}`);
-  if (isAPISnapshotUsed) {
-    cy.log(`Use API snapshot: ${fixtureName}`);
-  }
-
+  cy.log(`API Recording: ON`);
   /**
    * `startMonitorAPI()` is always required regardless of snapshot or real API:
    *   * If real API is used, `cy.intercept` is running against regex to monitor all
@@ -88,9 +81,6 @@ export function setupCypressInterception() {
    * intercept` here to run against regex in addition.
    */
   startMonitorAPI();
-  if (isAPISnapshotUsed) {
-    // loadAPIFixture();
-  }
 }
 
 /**
@@ -179,22 +169,5 @@ function startMonitorAPI() {
     cy.intercept('POST', apiRegex, routeHandlerWithRealResponse);
     cy.intercept('PUT', apiRegex, routeHandlerWithRealResponse);
     cy.intercept('DELETE', apiRegex, routeHandlerWithRealResponse);
-  });
-}
-
-function loadAPIFixture() {
-  const { fixtureName, currentTestFullTitle } = getTestCaseInfo();
-  const apiHosts = Cypress.env('apiHosts').split(',');
-  return cy.fixture(fixtureName).then((snapshotFixture: APISnapshotFixture) => {
-    // in snapshot, we use `currentTestFullTitle` from .spec.ts file as the Key
-    const snapshot = snapshotFixture[currentTestFullTitle];
-    snapshot.records.forEach((apiRecord) => {
-      const fullUrl = `${apiHosts[apiRecord.matchHostIndex].trim()}${
-        apiRecord.url
-      }`;
-      cy.intercept(apiRecord.method as any, fullUrl, (request) => {
-        routeHandlerWithMockResponse(request, apiRecord.response.body || {});
-      });
-    });
   });
 }

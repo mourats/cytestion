@@ -133,8 +133,7 @@ const checkTestsAlreadyGenerate = async () => {
         let filesTmp = fs
           .readdirSync('tmp/')
           .filter((file) => file !== '.gitkeep');
-        if (filesTmp.length > 0)
-          execSync(`rm -v ${path_project.resolve(__dirname, fileTest)}`);
+        if (filesTmp.length > 0) execSync(`rm -v tmp/*`);
       } else if (promptedModule.selectedOption === 'Abort the generation') {
         process.exit(0);
       }

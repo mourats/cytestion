@@ -14,10 +14,3 @@ before(() => {
 beforeEach(() => {
   setupCypressInterception();
 });
-
-afterEach(() => {
-  const { isAPIRecording } = cy._config;
-  if (isAPIRecording) {
-    // writeRecordedAPIToFixture();
-  }
-});
