@@ -73,17 +73,17 @@ const verifyOrCreateDirectoryAndUtilFiles = () => {
         'cypress/support/index.js does not exist or does not include the content of its referents in the base directory'
       );
       console.log('Copying the file from the base directory');
-      fs.writeFileSync('cypress/support/index.js', indexFileBase);
+      // fs.writeFileSync('cypress/support/index.js', indexFileBase);
     }
     if (!commandsFileExists) {
       console.log(
         'cypress/support/commands.js does not exist or does not include the content of its referents in the base directory'
       );
       console.log('Copying the file from the base directory');
-      fs.writeFileSync('cypress/support/commands.js', commandsFileBase);
+      // fs.writeFileSync('cypress/support/commands.js', commandsFileBase);
     }
     if (!indexPluginExists) {
-      fs.writeFileSync('cypress/plugins/index.js', indexPluginBase);
+      // fs.writeFileSync('cypress/plugins/index.js', indexPluginBase);
     }
   };
 
